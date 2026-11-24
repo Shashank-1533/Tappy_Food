@@ -1,10 +1,16 @@
 /* ==========================================================================
-   TAPPY FOOD - STREET FOOD MASTER STYLESHEET
-   Design Theme: Street Food ("Night-market neon on butcher paper")
+   TAPPY FOOD - MIDNIGHT NEON MASTER STYLESHEET
+   Design Theme: Midnight Navy & Neon Magenta Glow (As seen in the app reference)
+   Aesthetic Elements:
+     - Foundation: Deep Midnight Navy (#0A0E1A / #0D1224)
+     - Card Surface: Dark Indigo Slate (#13182B)
+     - Titles & Star Ratings: Warm Golden Amber (#FFB020)
+     - Primary Button: Glowing Magenta/Purple Gradient Pill
+     - Typography: Outfit (Headings & Badges) + Plus Jakarta Sans (Body & UI)
    Educational Showcase of CSS Selectors:
      1. Universal Selector (*)
      2. Element / Type Selectors (html, body, header, main, footer, article, etc.)
-     3. Class Selectors (.heading, .navbar, .navlist, .card, .btn, etc.)
+     3. Class Selectors (.heading, .navbar, .card, .btn-order, .item-title, etc.)
      4. ID Selectors (#home, #about, #bestsellers, #best-restaurants, etc.)
      5. Grouping Selectors (#bestsellers, #best-restaurants, #top-restaurants)
      6. Combinator Selectors (Descendant, Child, Adjacent Sibling, General Sibling)
@@ -16,47 +22,50 @@
 
 /* --------------------------------------------------------------------------
    0. EXTERNAL FONT IMPORTS
-   Google Fonts: Bowlby One (Display & Headings) and DM Sans (Body & Labels)
+   Google Fonts: Outfit (Display & Headings) and Plus Jakarta Sans (Body & UI)
    -------------------------------------------------------------------------- */
-@import url("https://fonts.googleapis.com/css2?family=Bowlby+One&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap");
 
 /* --------------------------------------------------------------------------
    1. ROOT DESIGN TOKENS (CSS Custom Properties)
-   Strictly derived from the Street Food Design System Specification:
-   - Primary:   #1A0F05 (Headlines & core text)
-   - Secondary: #7A6A54 (Borders, captions, metadata)
-   - Tertiary:  #F23C3C (The sole driver for interaction. Reserve it.)
-   - Neutral:   #F5E9CF (Page foundation butcher-paper)
-   - Surface:   #FCF3DC (Card & container surface)
-   - On-Primary: #FCF3DC (Text color on primary/tertiary interactions)
-   Flat design philosophy: No gradients. Single accent rule is load-bearing.
    -------------------------------------------------------------------------- */
 :root {
-  /* Colors */
-  --color-primary: #1a0f05;
-  --color-secondary: #7a6a54;
-  --color-tertiary: #f23c3c;
-  --color-neutral: #f5e9cf;
-  --color-surface: #fcf3dc;
-  --color-on-primary: #fcf3dc;
+  /* Surface & Background Colors */
+  --bg-body: #0A0E1A;
+  --bg-card: #13182B;
+  --bg-card-hover: #171E36;
+  --bg-glass: rgba(19, 24, 43, 0.82);
+  --bg-input: #0B0E1B;
+  --bg-footer: #070A12;
 
-  /* Typography */
-  --font-display: "Bowlby One", cursive, sans-serif;
-  --font-body:
-    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Typography Colors */
+  --color-white: #FFFFFF;
+  --color-amber: #FFB020;
+  --color-text-body: #94A3B8;
+  --color-text-muted: #8E98B0;
+  --color-text-dim: #64748B;
 
-  /* Typography Scales */
-  --font-size-display: 4.5rem;
-  --font-size-h1: 2.4rem;
-  --font-size-h2: 1.85rem;
-  --font-size-h3: 1.35rem;
-  --font-size-body: 1rem;
-  --font-size-label: 0.78rem;
+  /* Accent & Interactive (Neon Magenta / Fuchsia-Purple Gradient) */
+  --btn-gradient: linear-gradient(135deg, #FF007A 0%, #7928CA 100%);
+  --btn-gradient-hover: linear-gradient(135deg, #FF1A8C 0%, #9035EA 100%);
+  --btn-glow: 0 6px 22px rgba(255, 0, 122, 0.45);
+  --btn-glow-hover: 0 8px 30px rgba(255, 0, 122, 0.7);
+
+  /* Borders & Shadows */
+  --border-card: 1px solid rgba(255, 255, 255, 0.08);
+  --border-card-hover: 1px solid rgba(255, 0, 122, 0.35);
+  --border-subtle: 1px solid rgba(255, 255, 255, 0.06);
+  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: 0 18px 45px rgba(0, 0, 0, 0.65), 0 0 25px rgba(255, 0, 122, 0.15);
+
+  /* Typography Stacks */
+  --font-display: "Outfit", sans-serif;
+  --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Corner Radii */
-  --rounded-sm: 4px;
-  --rounded-md: 8px;
-  --rounded-lg: 14px;
+  --rounded-sm: 6px;
+  --rounded-md: 10px;
+  --rounded-lg: 18px;
   --rounded-full: 9999px;
 
   /* Spacing Tokens */
@@ -64,7 +73,6 @@
   --spacing-md: 16px;
   --spacing-lg: 32px;
   --spacing-xl: 48px;
-  --spacing-card: 24px;
 }
 
 /* --------------------------------------------------------------------------
@@ -87,15 +95,20 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 100px; /* Offset for sticky navigation */
-  background-color: var(--color-neutral);
+  background-color: var(--bg-body);
 }
 
 body {
-  background-color: var(--color-neutral);
-  color: var(--color-primary);
+  background-color: var(--bg-body);
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255, 0, 122, 0.09) 0%, transparent 55%),
+    radial-gradient(circle at 10% 25%, rgba(121, 40, 202, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 90% 70%, rgba(255, 176, 32, 0.05) 0%, transparent 40%);
+  background-attachment: fixed;
+  color: var(--color-text-body);
   font-family: var(--font-body);
-  font-size: var(--font-size-body);
-  line-height: 1.55;
+  font-size: 1rem;
+  line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -104,7 +117,7 @@ body {
 
 header {
   text-align: center;
-  padding: 32px 20px 24px;
+  padding: 36px 20px 24px;
   position: relative;
   z-index: 100;
   max-width: 1240px;
@@ -118,48 +131,45 @@ main {
 }
 
 footer {
-  background-color: var(--color-primary);
-  color: var(--color-surface);
-  border-top: 2px solid var(--color-primary);
+  background-color: var(--bg-footer);
+  color: var(--color-text-muted);
+  border-top: var(--border-subtle);
   padding: 70px 20px 50px;
   text-align: center;
   position: relative;
 }
 
 article {
-  background-color: var(--color-surface);
-  color: var(--color-primary);
-  border: 1.5px solid var(--color-primary);
+  background-color: var(--bg-card);
+  color: var(--color-white);
+  border: var(--border-card);
   border-radius: var(--rounded-lg);
-  padding: var(--spacing-card);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 4px 4px 0 var(--color-primary);
+  box-shadow: var(--shadow-card);
   position: relative;
   overflow: hidden;
-  transition:
-    transform 0.22s ease,
-    box-shadow 0.22s ease;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s ease, border-color 0.28s ease;
 }
 
 figure {
   margin-top: 36px;
   border-radius: var(--rounded-lg);
   overflow: hidden;
-  border: 2px solid var(--color-primary);
-  box-shadow: 4px 4px 0 var(--color-primary);
-  background-color: var(--color-surface);
+  border: var(--border-card);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  background-color: var(--bg-card);
   position: relative;
 }
 
 figcaption {
-  background-color: var(--color-surface);
+  background-color: var(--bg-card);
   padding: 14px 22px;
-  color: var(--color-secondary);
+  color: var(--color-text-muted);
   font-size: 0.9rem;
   font-family: var(--font-body);
-  border-top: 1.5px solid var(--color-primary);
+  border-top: var(--border-subtle);
   text-align: center;
 }
 
@@ -168,77 +178,92 @@ form {
 }
 
 fieldset {
-  background-color: var(--color-surface);
-  border: 2px solid var(--color-primary);
+  background-color: var(--bg-card);
+  border: var(--border-card);
   border-radius: var(--rounded-lg);
-  padding: 42px 36px;
-  box-shadow: 6px 6px 0 var(--color-primary);
+  padding: 44px 38px;
+  box-shadow: var(--shadow-card);
 }
 
 legend {
   font-family: var(--font-display);
   font-size: 1.6rem;
-  font-weight: 400;
-  color: var(--color-primary);
-  padding: 0 14px;
+  font-weight: 700;
+  color: var(--color-white);
+  padding: 0 16px;
   letter-spacing: -0.01em;
 }
 
 label {
   display: block;
   font-family: var(--font-body);
-  font-size: var(--font-size-label);
+  font-size: 0.82rem;
   font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
-h1,
-h2,
-h3,
-h4 {
+h1, h2, h3, h4 {
   font-family: var(--font-display);
-  color: var(--color-primary);
+  color: var(--color-white);
   letter-spacing: -0.01em;
 }
 
 p {
   font-family: var(--font-body);
-  color: var(--color-primary);
+  color: var(--color-text-body);
+}
+
+del {
+  color: var(--color-text-dim);
+  text-decoration: line-through;
 }
 
 /* --------------------------------------------------------------------------
    4. CLASS SELECTORS
    Styles specific components matching class attributes.
    -------------------------------------------------------------------------- */
+.text-amber {
+  color: var(--color-amber);
+}
+
 .announcement {
-  display: inline-block;
-  background-color: var(--color-primary);
-  color: var(--color-surface);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 0, 122, 0.12);
+  color: #FFA3CF;
+  border: 1px solid rgba(255, 0, 122, 0.3);
   font-family: var(--font-body);
-  font-size: var(--font-size-label);
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 6px 18px;
   border-radius: var(--rounded-full);
   margin-bottom: var(--spacing-md);
-  border: 1.5px solid var(--color-primary);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #FF007A;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #FF007A;
 }
 
 .heading {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 6.5vw, var(--font-size-display));
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--color-primary);
-  line-height: 1.05;
-  text-transform: uppercase;
+  font-size: clamp(2.8rem, 6vw, 4.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+  line-height: 1.08;
   margin-bottom: 12px;
-  transition: transform 0.25s ease;
   display: inline-block;
+  transition: transform 0.25s ease;
 }
 
 .heading:hover {
@@ -247,22 +272,23 @@ p {
 
 .navbar {
   display: inline-block;
-  background-color: var(--color-surface);
-  border: 1.5px solid var(--color-primary);
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--rounded-full);
   padding: 8px 18px;
-  box-shadow: 3px 3px 0 var(--color-primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   position: sticky;
   top: 16px;
   z-index: 1000;
-  margin-top: 14px;
-  transition:
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  margin-top: 16px;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .navbar:hover {
-  box-shadow: 5px 5px 0 var(--color-primary);
+  border-color: rgba(255, 0, 122, 0.4);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(255, 0, 122, 0.2);
 }
 
 .navlist {
@@ -283,209 +309,119 @@ p {
 
 .navitem {
   text-decoration: none;
-  color: var(--color-primary);
+  color: var(--color-text-muted);
   font-family: var(--font-body);
-  font-size: var(--font-size-label);
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 8px 16px;
   border-radius: var(--rounded-full);
-  transition: all 0.2s ease;
+  transition: all 0.22s ease;
   display: block;
 }
 
 .navitem:hover {
-  background-color: var(--color-primary);
-  color: var(--color-surface);
+  color: var(--color-white);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .section_title {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4vw, var(--font-size-h1));
-  font-weight: 400;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  font-weight: 800;
   letter-spacing: -0.01em;
-  color: var(--color-primary);
+  color: var(--color-white);
   margin-bottom: 14px;
   text-align: center;
-  line-height: 1.15;
-  text-transform: uppercase;
+  line-height: 1.2;
 }
 
 .heropara {
   font-size: 1.15rem;
-  color: var(--color-secondary);
+  color: var(--color-text-body);
   max-width: 820px;
   margin: 0 auto 16px;
-  line-height: 1.68;
+  line-height: 1.7;
 }
 
 .hero-subtext {
   font-size: 0.96rem;
-  color: var(--color-secondary);
+  color: var(--color-text-muted);
   max-width: 680px;
-  margin: 0 auto 24px;
+  margin: 0 auto 26px;
   line-height: 1.6;
 }
 
 .badge {
   display: inline-block;
-  background-color: var(--color-surface);
-  color: var(--color-primary);
-  border: 1.5px solid var(--color-primary);
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--rounded-full);
-  padding: 5px 14px;
+  padding: 5px 15px;
   font-family: var(--font-body);
-  font-size: var(--font-size-label);
+  font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 14px;
 }
 
 .badge.hero-badge {
-  background-color: var(--color-neutral);
-  box-shadow: 2px 2px 0 var(--color-primary);
+  background-color: rgba(255, 176, 32, 0.12);
+  color: var(--color-amber);
+  border-color: rgba(255, 176, 32, 0.35);
 }
 
 .header {
-  background-color: var(--color-surface);
-  border: 2px solid var(--color-primary);
+  background-color: var(--bg-card);
+  border: var(--border-card);
   border-radius: var(--rounded-lg);
-  padding: 60px 40px;
+  padding: 64px 40px;
   margin: 36px auto 70px;
   text-align: center;
-  box-shadow: 6px 6px 0 var(--color-primary);
+  box-shadow: var(--shadow-card);
   position: relative;
   overflow: hidden;
 }
 
 .about {
-  background-color: var(--color-surface);
-  border: 2px solid var(--color-primary);
+  background-color: var(--bg-card);
+  border: var(--border-card);
   border-radius: var(--rounded-lg);
-  padding: 52px 42px;
+  padding: 56px 42px;
   margin: 0 auto 80px;
   max-width: 1060px;
-  box-shadow: 6px 6px 0 var(--color-primary);
+  box-shadow: var(--shadow-card);
   text-align: center;
 }
 
-/* Primary Button (.btn-primary) - Street Food Interaction Driver
-   Uses Tertiary (#F23C3C) exclusively as the primary interaction driver. */
-.btn-primary {
-  background-color: var(--color-tertiary);
-  color: var(--color-on-primary);
-  border: 1.5px solid var(--color-primary);
-  border-radius: var(--rounded-md);
-  padding: 12px 24px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 3px 3px 0 var(--color-primary);
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}
-
-.btn-primary:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--color-primary);
-}
-
-.btn-primary:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 var(--color-primary);
-}
-
-/* Secondary Action Button (.btn) - Solid Charcoal Butcher Stamp */
-.btn {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
-  border: 1.5px solid var(--color-primary);
-  border-radius: var(--rounded-md);
-  padding: 10px 18px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: var(--font-size-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 2px 2px 0 var(--color-secondary);
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn:hover {
-  background-color: #2e1a0b;
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 var(--color-primary);
-}
-
-.btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 var(--color-primary);
-}
-
-/* Outline Restaurant Card Button (.btn1) */
-.btn1 {
-  background-color: var(--color-surface);
-  color: var(--color-primary);
-  border: 1.5px solid var(--color-primary);
-  border-radius: var(--rounded-md);
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: var(--font-size-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 11px 18px;
-  cursor: pointer;
-  box-shadow: 2px 2px 0 var(--color-primary);
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* ==========================================================================
+   CARD DESIGN LANGUAGE (Directly replicating the user screenshot)
+   ========================================================================== */
+.card-image-wrap {
+  position: relative;
   width: 100%;
-  margin-top: auto;
+  height: 220px;
+  overflow: hidden;
+  border-radius: var(--rounded-lg) var(--rounded-lg) 0 0;
+  background-color: #0d1120;
 }
 
-.btn1:hover {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 var(--color-secondary);
-}
-
-.btn1:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 var(--color-primary);
-}
-
-.card-badge {
+.card-image-wrap::after {
+  content: "";
   position: absolute;
-  top: 16px;
-  left: 16px;
-  background-color: var(--color-surface);
-  color: var(--color-primary);
-  border: 1.5px solid var(--color-primary);
-  border-radius: var(--rounded-sm);
-  padding: 4px 10px;
-  font-family: var(--font-body);
-  font-size: var(--font-size-label);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  box-shadow: 2px 2px 0 var(--color-primary);
-  z-index: 2;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(19, 24, 43, 0.95) 100%);
+  pointer-events: none;
+}
+
+.card-content {
+  padding: 20px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .card-meta {
@@ -493,17 +429,57 @@ p {
   align-items: center;
   gap: 10px;
   font-family: var(--font-body);
-  font-size: var(--font-size-label);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--color-secondary);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
 }
 
-.card-meta .rating {
-  color: var(--color-primary);
+.card-meta .meta-tag {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.card-meta .meta-time {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.card-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  margin-bottom: 10px;
+}
+
+.card-rating .star {
+  color: var(--color-amber);
+  font-weight: 700;
+}
+
+.card-rating .cuisine {
+  color: var(--color-text-muted);
+}
+
+.item-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-amber);
+  margin-bottom: 8px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.item-desc {
+  font-family: var(--font-body);
+  color: var(--color-text-body);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin-bottom: 22px;
+  flex-grow: 1;
+  text-align: left;
 }
 
 .card-footer {
@@ -511,28 +487,80 @@ p {
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px dashed rgba(122, 106, 84, 0.4);
+  gap: 14px;
 }
 
-.price {
+.price-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.price-current {
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  color: var(--color-primary);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-white);
   letter-spacing: -0.01em;
 }
 
+.price-original {
+  font-size: 0.92rem;
+  color: var(--color-text-dim);
+}
+
+/* ==========================================================================
+   PRIMARY ACTION BUTTON: Glowing Magenta/Purple Pill Button (.btn-order)
+   Matches the "ORDER NOW" button in the uploaded image.
+   ========================================================================== */
+.btn-order {
+  background: var(--btn-gradient);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--rounded-full);
+  padding: 12px 26px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: var(--btn-glow);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-order:hover {
+  background: var(--btn-gradient-hover);
+  box-shadow: var(--btn-glow-hover);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-order:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-order.btn-large {
+  padding: 15px 36px;
+  font-size: 0.98rem;
+  letter-spacing: 0.05em;
+}
+
+.btn-order.btn-full {
+  width: 100%;
+}
+
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   text-align: left;
 }
 
 .form-action {
-  margin-top: 24px;
-}
-
-.form-action .btn-primary {
-  width: 100%;
+  margin-top: 26px;
 }
 
 /* --------------------------------------------------------------------------
@@ -546,52 +574,49 @@ p {
 #about h3 {
   font-family: var(--font-display);
   font-size: 1.55rem;
-  color: var(--color-primary);
-  margin: 36px 0 20px;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  color: var(--color-white);
+  margin: 40px 0 24px;
 }
 
 #about ul {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
   padding: 0;
   margin-top: 20px;
   text-align: left;
 }
 
 #about ul li {
-  background-color: var(--color-neutral);
-  border: 1.5px solid var(--color-primary);
+  background-color: rgba(255, 255, 255, 0.035);
+  border: var(--border-card);
   border-radius: var(--rounded-md);
-  padding: 20px 20px;
-  color: var(--color-primary);
-  box-shadow: 3px 3px 0 var(--color-primary);
+  padding: 22px 20px;
+  color: var(--color-white);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
 #about ul li:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0 var(--color-primary);
+  transform: translateY(-3px);
+  border-color: rgba(255, 176, 32, 0.4);
 }
 
 #about ul li strong {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--color-primary);
-  line-height: 1.3;
+  color: var(--color-amber);
 }
 
 #about ul li span {
   font-size: 0.88rem;
-  color: var(--color-secondary);
+  color: var(--color-text-muted);
   line-height: 1.5;
 }
 
@@ -609,8 +634,8 @@ p {
 #best-restaurants,
 #top-restaurants {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
   margin-bottom: 95px;
   position: relative;
 }
@@ -636,20 +661,19 @@ p {
 /* Child Combinator: Direct child p of section */
 section > p {
   text-align: center;
-  color: var(--color-secondary);
+  color: var(--color-text-muted);
   max-width: 720px;
-  margin: 0 auto 34px;
+  margin: 0 auto 36px;
   font-size: 1.02rem;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 /* Descendant Combinator: Paragraphs inside header */
 header p {
-  color: var(--color-secondary);
+  color: var(--color-text-muted);
   font-size: 1.05rem;
   max-width: 650px;
   margin: 0 auto 18px;
-  letter-spacing: 0.2px;
 }
 
 /* Descendant Combinator: Images inside article cards */
@@ -657,42 +681,19 @@ article img {
   width: 100%;
   height: 220px;
   object-fit: cover;
-  border-radius: var(--rounded-md);
-  margin-bottom: var(--spacing-md);
-  border: 1.5px solid var(--color-primary);
   display: block;
-  transition: transform 0.3s ease;
+  transition: transform 0.45s ease;
 }
 
 article:hover img {
-  transform: scale(1.025);
-}
-
-/* Descendant Combinator: Headings inside article */
-article h3 {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: var(--color-primary);
-  margin-bottom: 8px;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-}
-
-/* Descendant Combinator: Paragraphs inside article */
-article p {
-  color: var(--color-secondary);
-  font-size: 0.92rem;
-  line-height: 1.55;
-  margin-bottom: 18px;
-  text-align: left;
-  flex-grow: 1;
+  transform: scale(1.04);
 }
 
 /* Hover state on cards */
 article:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 7px 7px 0 var(--color-primary);
+  transform: translateY(-5px);
+  border-color: rgba(255, 0, 122, 0.45);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* Figure image child */
@@ -710,11 +711,17 @@ figure:hover img {
 
 /* Footer descendant typography */
 footer p {
-  color: #c5b7a1;
+  color: var(--color-text-dim);
   font-size: 0.92rem;
   max-width: 620px;
   margin: 0 auto 12px;
   line-height: 1.6;
+}
+
+footer .copyright {
+  color: #4A5568;
+  font-size: 0.85rem;
+  margin-top: 14px;
 }
 
 footer nav {
@@ -726,12 +733,12 @@ footer nav {
 }
 
 footer h4 {
-  color: var(--color-surface);
-  font-family: var(--font-body);
-  font-size: var(--font-size-label);
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
   font-weight: 700;
   margin-bottom: 18px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -750,26 +757,26 @@ footer ul li a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--color-surface);
+  color: var(--color-text-muted);
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: var(--font-size-label);
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 10px 18px;
   border-radius: var(--rounded-full);
-  background-color: rgba(252, 243, 220, 0.07);
-  border: 1.5px solid rgba(252, 243, 220, 0.25);
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.22s ease;
 }
 
 footer ul li a:hover {
-  background-color: var(--color-tertiary);
-  border-color: var(--color-tertiary);
-  color: var(--color-surface);
+  background: var(--btn-gradient);
+  border-color: transparent;
+  color: var(--color-white);
+  box-shadow: var(--btn-glow);
   transform: translateY(-2px);
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
 footer ul li a svg {
@@ -800,33 +807,31 @@ input[type="email"],
 input[type="tel"] {
   width: 100%;
   margin-top: 6px;
-  padding: 13px 16px;
+  padding: 14px 18px;
   border-radius: var(--rounded-md);
-  background-color: var(--color-neutral);
-  border: 1.5px solid var(--color-primary);
-  color: var(--color-primary);
+  background-color: var(--bg-input);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--color-white);
   font-family: var(--font-body);
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  box-shadow: inset 1px 1px 3px rgba(26, 15, 5, 0.08);
+  font-size: 0.98rem;
+  transition: all 0.22s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="tel"]:focus {
   outline: none;
-  border-color: var(--color-tertiary);
-  background-color: #ffffff;
-  box-shadow: 0 0 0 2px var(--color-tertiary);
+  border-color: #FF007A;
+  background-color: #101424;
+  box-shadow: 0 0 16px rgba(255, 0, 122, 0.35), inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* Generic button targeting for primary submit */
 button[type="submit"] {
   width: 100%;
   padding: 14px 24px;
 }
 
-/* External links target */
 a[target="_blank"] {
   cursor: pointer;
 }
@@ -836,21 +841,19 @@ a[target="_blank"] {
    Dynamic (:hover, :active, :focus) and Structural (:first-child, :not)
    -------------------------------------------------------------------------- */
 .navitem:focus-visible,
-.btn:focus-visible,
-.btn1:focus-visible,
-.btn-primary:focus-visible {
-  outline: 2px solid var(--color-tertiary);
+.btn-order:focus-visible {
+  outline: 2px solid #FF007A;
   outline-offset: 2px;
 }
 
 #about ul li:first-child {
-  border-top-width: 2px;
+  border-top-color: rgba(255, 176, 32, 0.5);
 }
 
-/* Negation pseudo-class: buttons not primary and not btn1 */
-button[type="button"]:not(.btn-primary):not(.btn1) {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
+/* Negation pseudo-class: buttons not inside cards */
+button[type="button"]:not(.btn-order) {
+  background-color: var(--bg-card);
+  color: var(--color-white);
 }
 
 /* --------------------------------------------------------------------------
@@ -858,38 +861,35 @@ button[type="button"]:not(.btn-primary):not(.btn1) {
    Styling placeholders, custom scrollbar, selection.
    -------------------------------------------------------------------------- */
 input::placeholder {
-  color: var(--color-secondary);
+  color: var(--color-text-dim);
   font-size: 0.92rem;
-  opacity: 0.8;
 }
 
 ::selection {
-  background-color: var(--color-tertiary);
-  color: var(--color-on-primary);
+  background-color: #FF007A;
+  color: var(--color-white);
 }
 
-/* Custom flat scrollbar conforming to Street Food palette */
+/* Custom modern scrollbar matching the dark neon theme */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--color-neutral);
+  background-color: var(--bg-body);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--color-secondary);
-  border-radius: var(--rounded-sm);
-  border: 2px solid var(--color-neutral);
+  background: linear-gradient(180deg, #FF007A, #7928CA);
+  border-radius: var(--rounded-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary);
+  background: linear-gradient(180deg, #7928CA, #FF007A);
 }
 
 /* --------------------------------------------------------------------------
    11. RESPONSIVE DESIGN & MEDIA QUERIES
-   Ensures seamless responsive experience across tablets and smartphones.
    -------------------------------------------------------------------------- */
 @media (max-width: 900px) {
   .heading {
@@ -911,7 +911,7 @@ input::placeholder {
 
   .navitem {
     padding: 6px 12px;
-    font-size: 0.74rem;
+    font-size: 0.76rem;
   }
 
   #bestsellers,
@@ -940,10 +940,6 @@ input::placeholder {
     font-size: 0.72rem;
   }
 
-  article {
-    padding: 18px;
-  }
-
   fieldset {
     padding: 28px 18px;
   }
@@ -962,12 +958,16 @@ input::placeholder {
 
   .card-footer {
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     align-items: stretch;
     text-align: center;
   }
 
-  .card-footer .btn {
+  .price-wrap {
+    justify-content: center;
+  }
+
+  .btn-order {
     width: 100%;
   }
 }
